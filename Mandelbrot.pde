@@ -1,43 +1,37 @@
-
-double sqtwo = sqrt(2);
-double isqtwo = 1/sqtwo;
+int counter = 1;
+int flip_counter_direction = -1;
 
 void setup() {
-  size(750, 500);
-  pixelDensity(1);
-  //translate(width/2,height/2);
-  //scale(1,-1);
-  blendMode(REPLACE);
+  size(750, 750);
+  // Need to change width/height because the pixel array increases with pixelDensity
+  // pixelDensity(2);
+  // width = 2*width;
+  // height = 2*height;
   background(255);
 
+}
 
-  //loadPixels();
+void draw() {
+  
+  loadPixels();
 
-  int divergence_n = 100;
+  int divergence_n = counter;
   double tolerance = 20;
 
   double c_r = 0;
   double c_i = 0;
 
-  int counter = 0;
-
-  int numtolhit = 0;
-
   for (int x = 0; x < width; ++x) {
+    
     // Find the real component
     c_r = ((double)x/(width/3)) - 2;
-    // print(c_i);
-    //     print(", ");
-    //     print(c_r);
-    //     print("\n");
 
     for (int y = 0; y < height; ++y) {
 
       // Find the imaginary component
-      c_i = 1 - ((double)y/(height/2));
+      c_i = 1.5 - ((double)y/(height/3));
 
       //Reset holding variables
-      //double [] z_new = {1, 1};
       double [] z = {0, 0};
       int i = 0;
 
@@ -46,42 +40,22 @@ void setup() {
         z = complexfunction(z[0],z[1],c_i,c_r);
       }
 
-      //if (i < divergence_n-1){
-        stroke(255*i/(divergence_n));//*(i/divergence_n)
-        point(x,y);
-        counter = counter+i;
-        numtolhit++;
-      //}
+      pixels[(y)*width + x] = color(255*i/(divergence_n));
 
-      //point(x,x);
     }
   }
-  print(counter);
-  print("\n");
-  print(numtolhit);
-  //updatePixels();
-  
-  
-  // c_i = 0.5;
-  // c_r = 0.5;
-  // for (int i = 0; i < 10; ++i) {
+  updatePixels();
 
-  //   z = complexfunction(z[0],z[1],c_i,c_r);
-  //   print(z[1]);
-  //   print(", ");
-  //   print(z[0]);
-  //   print("\n");
-    
-  // }
+  if (counter == 50 || counter == 1){
+    flip_counter_direction = -1*flip_counter_direction;
+  }
+  counter = counter + flip_counter_direction;
+  //counter++;
 
-}
-
-void draw() {
-  
   // ***Render***
-  // saveFrame("####.bmp");
-  // if(frameCount == 500)
-  // exit();
+  saveFrame("Output/####.bmp");
+  if(frameCount == 100)
+  exit();
   
 }
 
